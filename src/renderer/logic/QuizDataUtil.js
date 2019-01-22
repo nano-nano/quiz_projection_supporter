@@ -5,13 +5,14 @@ let quizDatas = [
   {qId: '100', qText: '問題文１', qAnswer: '解答１', qAnotherAnswer: '別解１'},
   {qId: '101', qText: '問題文２', qAnswer: '解答２', qAnotherAnswer: '別解２'},
   {qId: '102', qText: '問題文３', qAnswer: '解答３', qAnotherAnswer: '別解３'},
-  {qId: '200', qText: '問題文４', qAnswer: '解答４', qAnotherAnswer: '別解４'}
+  {qId: '200', qText: '問題文４', qAnswer: '解答４', qAnotherAnswer: '別解４'},
+  {qId: '999', qText: '問題文４ほげほげほげほげほげほげほげ', qAnswer: '解答４ふがふがふがふが', qAnotherAnswer: '別解５'}
 ]
 
 let currentIdx = 0
 
-export default class QuizDataUtil {
-  static getQuizDataFromIdx (index) {
+class QuizDataUtil {
+  getQuizDataFromIdx (index) {
     if (index < 0 || quizDatas.length <= index) {
       // インデックス外
       return null
@@ -19,7 +20,7 @@ export default class QuizDataUtil {
     return quizDatas[index]
   }
 
-  static getQuizDataFromQId (qId) {
+  getQuizDataFromQId (qId) {
     for (let quizData of quizDatas) {
       if (qId === quizData.qId) {
         return quizData
@@ -28,11 +29,11 @@ export default class QuizDataUtil {
     return null
   }
 
-  static getCurrentQuizData () {
+  getCurrentQuizData () {
     return this.getQuizDataFromIdx(currentIdx)
   }
 
-  static getNextQuizData () {
+  getNextQuizData () {
     if (quizDatas.length > currentIdx) {
       return this.getQuizDataFromIdx(currentIdx + 1)
     } else {
@@ -40,7 +41,7 @@ export default class QuizDataUtil {
     }
   }
 
-  static getPrevQuizData () {
+  getPrevQuizData () {
     if (currentIdx > 0) {
       return this.getQuizDataFromIdx(currentIdx - 1)
     } else {
@@ -48,19 +49,19 @@ export default class QuizDataUtil {
     }
   }
 
-  static next () {
+  next () {
     if (quizDatas.length > (currentIdx + 1)) {
       currentIdx++
     }
   }
 
-  static prev () {
+  prev () {
     if ((currentIdx - 1) >= 0) {
       currentIdx--
     }
   }
 
-  static updateCurrentIdxByQId (newQId) {
+  updateCurrentIdxByQId (newQId) {
     return new Promise((resolve, reject) => {
       let idx = 0
       for (let quizData of quizDatas) {
@@ -77,3 +78,5 @@ export default class QuizDataUtil {
     })
   }
 }
+
+export default new QuizDataUtil()

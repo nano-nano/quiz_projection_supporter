@@ -26,7 +26,7 @@
 
 <script>
   export default {
-    props: [],
+    props: ['qId'],
     data () {
       return {
         qText: 'それなりに長そうな問題文が来たときの想定ができるようにそれなりの長さの文章をここに表示します。',

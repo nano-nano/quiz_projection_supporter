@@ -15,11 +15,22 @@
   import QuizDataUtil from '../../logic/QuizDataUtil'
 
   export default {
-    props: ['title', 'qId'],
+    props: ['title', 'qId', 'qTextSummary'],
     data () {
       return {
         qText: '---',
-        qAnswer: '---'
+        qAnswer: '---',
+        summaryQText: '---'
+      }
+    },
+    methods: {
+      getSummaryText (target) {
+        if (target.length > 8) {
+          // 先頭から8文字分だけ切り出して、残りを省略
+          return target.substr(0, 8) + '...'
+        } else {
+          return target
+        }
       }
     },
     watch: {
@@ -33,8 +44,8 @@
             this.qText = '---'
             this.qAnswer = '---'
           } else {
-            this.qText = quizData.qText
-            this.qAnswer = quizData.qAnswer
+            this.qText = this.qTextSummary ? this.getSummaryText(quizData.qText) : quizData.qText
+            this.qAnswer = this.qTextSummary ? this.getSummaryText(quizData.qAnswer) : quizData.qAnswer
           }
         }
       }
@@ -44,6 +55,6 @@
 
 <style>
   .qCard {
-    height: 180px;
+    height: 200px;
   }
 </style>

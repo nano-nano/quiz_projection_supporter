@@ -32,7 +32,7 @@
       <div class="row justify-content-center">
         <div class="col-3">
           <!-- ひとつ前の問題 -->
-          <question-card title="Prev" v-bind:qId=prevQId></question-card>
+          <question-card title="Prev" v-bind:qId=prevQId qTextSummary=true></question-card>
         </div>
 
         <div class="col-6 align-self-center">
@@ -42,7 +42,7 @@
 
         <div class="col-3">
           <!-- ひとつ次の問題 -->
-          <question-card title="Next" v-bind:qId=nextQId></question-card>
+          <question-card title="Next" v-bind:qId=nextQId qTextSummary=true></question-card>
         </div>
       </div>
 
@@ -55,7 +55,7 @@
 
         <div class="col-6">
           <p>
-            <b-button size="lg" variant="primary" block @click="onClickShowCandidateBtn()">
+            <b-button size="lg" variant="primary" block v-b-modal.displayConfirmDialog>
               Show Candidate
             </b-button>
           </p>
@@ -87,6 +87,8 @@
       <!-- QuestionID選択ダイアログ -->
       <select-question-id-dialog v-bind:qId=currentCandidateQId
         v-on:onOkClicked="onSelectQuestionIdDialogOk"></select-question-id-dialog>
+      <display-confirm-dialog v-bind:qId=currentCandidateQId
+        v-on:onOkClicked="onDisplayConfirmDialogOk"></display-confirm-dialog>
     </div>
   </div>
 </template>
@@ -95,6 +97,7 @@
   // 外だししているコンポーネント
   import QuestionCard from './MainScreen/QuestionCard'
   import SelectQuestionIdDialog from './MainScreen/SelectQuestionIdDialog'
+  import DisplayConfirmDialog from './MainScreen/DisplayConfirmDialog'
   // 外だししているjsファイル
   import WindowUtil from '../logic/WindowUtil'
   import QuizDataUtil from '../logic/QuizDataUtil'
@@ -103,7 +106,8 @@
     name: 'main-screen',
     components: {
       QuestionCard,
-      SelectQuestionIdDialog
+      SelectQuestionIdDialog,
+      DisplayConfirmDialog
     },
     data () {
       return {
@@ -119,7 +123,12 @@
       onClickProjectionScreenLink () {
         if (this.pjWindow == null) {
           const targetHref = this.$router.resolve('projection').href
-          this.pjWindow = WindowUtil.openWindow(targetHref, null)
+          const option = {
+            width: 1280,
+            height: 720,
+            autoHideMenuBar: true
+          }
+          this.pjWindow = WindowUtil.openWindow(targetHref, option)
         } else {
           this.pjWindow.close()
           this.pjWindow = null
@@ -129,7 +138,7 @@
         // ダミー実装
         this.updateQuizSelectCards()
       },
-      onClickShowCandidateBtn () {
+      onDisplayConfirmDialogOk () {
         this.currentDisplayedQId = this.currentCandidateQId
       },
       onClickDisableQuestionBtn () {
