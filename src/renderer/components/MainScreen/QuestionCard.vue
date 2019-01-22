@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-card v-bind:title="title" v-bind:sub-title="qNo" >
+    <b-card v-bind:title="title" v-bind:sub-title="qId" class="qCard">
       <p class="card-text">
         {{qText}}
       </p>
@@ -12,22 +12,38 @@
 </template>
 
 <script>
+  import QuizDataUtil from '../../logic/QuizDataUtil'
+
   export default {
-    props: ['title', 'qNo'],
+    props: ['title', 'qId'],
     data () {
       return {
-        qText: 'Question',
-        qAnswer: 'Answer'
+        qText: '---',
+        qAnswer: '---'
       }
     },
     watch: {
-      qNo: function () {
-        // 実際にはここに問題文を取得する処理が入る
-        this.qText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.' + this.qNo
+      qId: function () {
+        if (this.qId == null) {
+          this.qText = '---'
+          this.qAnswer = '---'
+        } else {
+          const quizData = QuizDataUtil.getQuizDataFromQId(this.qId)
+          if (quizData == null) {
+            this.qText = '---'
+            this.qAnswer = '---'
+          } else {
+            this.qText = quizData.qText
+            this.qAnswer = quizData.qAnswer
+          }
+        }
       }
     }
   }
 </script>
 
 <style>
+  .qCard {
+    height: 180px;
+  }
 </style>
