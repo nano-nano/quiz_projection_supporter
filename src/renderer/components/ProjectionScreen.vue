@@ -8,13 +8,13 @@
       </b-card>
 
       <div class="qAnswerArea">
-        <b-card class="qAnswerCard-AnotherAnswer">
+        <b-card v-bind:class="[isDisplayAnotherAnswers ? 'qAnswerCard-AnotherAnswer' : 'qAnswerCard-WoAnotherAnswer']">
           <p class="card-text">
             {{qAnswer}}
           </p>
         </b-card>
 
-        <b-card class="qAnotherAnswerCard">
+        <b-card class="qAnotherAnswerCard" v-if="isDisplayAnotherAnswers">
           <p class="card-text">
             {{qAnotherAnswer}}
           </p>
@@ -29,10 +29,28 @@
     props: ['qId'],
     data () {
       return {
-        qText: 'それなりに長そうな問題文が来たときの想定ができるようにそれなりの長さの文章をここに表示します。',
-        qAnswer: 'それなりに長そうな答え。',
-        qAnotherAnswer: 'それなりに長そうな別解表示用。'
+        qText: '',
+        qAnswer: '',
+        qAnotherAnswer: '',
+        isDisplayAnotherAnswers: false
       }
+    },
+    mounted: function () {
+      const ipc = this.$electron.ipcRenderer
+      ipc.on('displayQuizData', (event, arg) => {
+        if (arg != null) {
+          this.qText = arg.qText
+          this.qAnswer = arg.qAnswer
+          this.qAnotherAnswer = arg.qAnotherAnswer
+        } else {
+          this.qText = ''
+          this.qAnswer = ''
+          this.qAnotherAnswer = ''
+        }
+      })
+      ipc.on('isDisplayAnotherAnswers', (event, arg) => {
+        this.isDisplayAnotherAnswers = arg
+      })
     }
   }
 </script>

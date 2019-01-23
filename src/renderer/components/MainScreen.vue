@@ -86,6 +86,7 @@
     <div class="container">
       <!-- QuestionID選択ダイアログ -->
       <select-question-id-dialog v-on:onOkClicked="onSelectQuestionIdDialogOk"></select-question-id-dialog>
+      <!-- 投影確認ダイアログ -->
       <display-confirm-dialog v-bind:qData=candidateQuizData
         v-on:onOkClicked="onDisplayConfirmDialogOk"></display-confirm-dialog>
     </div>
@@ -147,10 +148,12 @@
       },
       onDisplayConfirmDialogOk () {
         this.displayedQuizData = this.candidateQuizData
-        // ProjectionScreenへsendする処理
+        // ProjectionScreenへ表示する問題データを送信する処理
+        this.sendMessageToPjWindow('displayQuizData', this.displayedQuizData)
       },
       onClickDisableQuestionBtn () {
         this.displayedQuizData = null
+        this.sendMessageToPjWindow('displayQuizData', this.displayedQuizData)
       },
       onSelectQuestionIdDialogOk (newQId) {
         this.currentQuizDataIdx = QuizDataUtil.getQuizDatasIdxByQId(this.quizDatas, newQId)
@@ -168,6 +171,17 @@
         this.candidateQuizData = QuizDataUtil.getQuizDataByIdx(this.quizDatas, this.currentQuizDataIdx)
         this.nextQuizData = QuizDataUtil.getQuizDataByIdx(this.quizDatas, this.currentQuizDataIdx + 1)
         this.prevQuizData = QuizDataUtil.getQuizDataByIdx(this.quizDatas, this.currentQuizDataIdx - 1)
+      },
+      sendMessageToPjWindow (channel, arg) {
+        if (this.pjWindow != null) {
+          // プロセス間通信の仕組みでProjectionScreenへ送信する
+          this.pjWindow.webContents.send(channel, arg)
+        }
+      }
+    },
+    watch: {
+      isDisplayAnotherAnswers: function () {
+        this.sendMessageToPjWindow('isDisplayAnotherAnswers', this.isDisplayAnotherAnswers)
       }
     }
   }
