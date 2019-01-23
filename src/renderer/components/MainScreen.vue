@@ -21,7 +21,7 @@
         <div class="col-8">
           <!-- 現在表示中の問題 -->
           <!-- 'v-bind:'で=の右側にあるdata要素とバインディングが可能になる -->
-          <question-card title="Current Displayed" v-bind:qId=currentDisplayedQId></question-card>
+          <question-card title="Current Displayed" v-bind:qData=displayedQuizData></question-card>
         </div>
       </div>
 
@@ -32,30 +32,30 @@
       <div class="row justify-content-center">
         <div class="col-3">
           <!-- ひとつ前の問題 -->
-          <question-card title="Prev" v-bind:qId=prevQId qTextSummary=true></question-card>
+          <question-card title="Prev" v-bind:qData=prevQuizData qTextSummary=true></question-card>
         </div>
 
         <div class="col-6 align-self-center">
           <!-- 表示候補の問題 -->
-          <question-card title="Displayed Candidate" v-bind:qId=currentCandidateQId></question-card>
+          <question-card title="Displayed Candidate" v-bind:qData=candidateQuizData></question-card>
         </div>
 
         <div class="col-3">
           <!-- ひとつ次の問題 -->
-          <question-card title="Next" v-bind:qId=nextQId qTextSummary=true></question-card>
+          <question-card title="Next" v-bind:qData=nextQuizData qTextSummary=true></question-card>
         </div>
       </div>
 
       <div class="row justify-content-center buttonArea">
         <div class="col-3">
-          <b-button size="lg" variant="outline-secondary" block　@click="onClickPrevBtn()">
+          <b-button size="lg" variant="outline-secondary" block @click="onClickPrevBtn()">
             ＜＜ Prev
           </b-button>
         </div>
 
         <div class="col-6">
           <p>
-            <b-button size="lg" variant="primary" block v-b-modal.displayConfirmDialog>
+            <b-button size="lg" variant="primary" block :disabled="(candidateQuizData == null)" v-b-modal.displayConfirmDialog>
               Show Candidate
             </b-button>
           </p>
@@ -85,9 +85,8 @@
 
     <div class="container">
       <!-- QuestionID選択ダイアログ -->
-      <select-question-id-dialog v-bind:qId=currentCandidateQId
-        v-on:onOkClicked="onSelectQuestionIdDialogOk"></select-question-id-dialog>
-      <display-confirm-dialog v-bind:qId=currentCandidateQId
+      <select-question-id-dialog v-on:onOkClicked="onSelectQuestionIdDialogOk"></select-question-id-dialog>
+      <display-confirm-dialog v-bind:qData=candidateQuizData
         v-on:onOkClicked="onDisplayConfirmDialogOk"></display-confirm-dialog>
     </div>
   </div>
@@ -111,12 +110,14 @@
     },
     data () {
       return {
-        isDisplayAnotherAnswers: false,
         pjWindow: null,
-        currentDisplayedQId: null,
-        currentCandidateQId: null,
-        nextQId: null,
-        prevQId: null
+        quizDatas: null,
+        currentQuizDataIdx: 0,
+        displayedQuizData: null,
+        candidateQuizData: null,
+        nextQuizData: null,
+        prevQuizData: null,
+        isDisplayAnotherAnswers: false
       }
     },
     methods: {
@@ -129,6 +130,10 @@
             autoHideMenuBar: true
           }
           this.pjWindow = WindowUtil.openWindow(targetHref, option)
+          this.pjWindow.on('closed', () => {
+            // ウィンドウが閉じられたらインスタンスもnullにしておく
+            this.pjWindow = null
+          })
         } else {
           this.pjWindow.close()
           this.pjWindow = null
@@ -136,53 +141,33 @@
       },
       onClickLoadQuizDataLink () {
         // ダミー実装
+        this.quizDatas = QuizDataUtil.createQuizDatas()
+        this.currentQuizDataIdx = 0
         this.updateQuizSelectCards()
       },
       onDisplayConfirmDialogOk () {
-        this.currentDisplayedQId = this.currentCandidateQId
+        this.displayedQuizData = this.candidateQuizData
+        // ProjectionScreenへsendする処理
       },
       onClickDisableQuestionBtn () {
-        this.currentDisplayedQId = null
+        this.displayedQuizData = null
       },
       onSelectQuestionIdDialogOk (newQId) {
-        if (newQId != null) {
-          QuizDataUtil.updateCurrentIdxByQId(newQId).then(() => {
-            // ちゃんと更新が終わってから表示を更新
-            this.currentCandidateQId = newQId
-            this.updateQuizSelectCards()
-          })
-        }
+        this.currentQuizDataIdx = QuizDataUtil.getQuizDatasIdxByQId(this.quizDatas, newQId)
+        this.updateQuizSelectCards()
       },
       onClickNextBtn () {
-        QuizDataUtil.next()
+        this.currentQuizDataIdx = QuizDataUtil.getNextIdx(this.quizDatas, this.currentQuizDataIdx)
         this.updateQuizSelectCards()
       },
       onClickPrevBtn () {
-        QuizDataUtil.prev()
+        this.currentQuizDataIdx = QuizDataUtil.getPrevIdx(this.currentQuizDataIdx)
         this.updateQuizSelectCards()
       },
       updateQuizSelectCards () {
-        // 表示候補カードを更新
-        const currentQuizData = QuizDataUtil.getCurrentQuizData()
-        if (currentQuizData != null) {
-          this.currentCandidateQId = currentQuizData.qId
-        } else {
-          this.currentCandidateQId = null
-        }
-        // ひとつ次カードを更新
-        const nextQuizData = QuizDataUtil.getNextQuizData()
-        if (nextQuizData != null) {
-          this.nextQId = nextQuizData.qId
-        } else {
-          this.nextQId = null
-        }
-        // ひとつ前カードを更新
-        const prevQuizData = QuizDataUtil.getPrevQuizData()
-        if (prevQuizData != null) {
-          this.prevQId = prevQuizData.qId
-        } else {
-          this.prevQId = null
-        }
+        this.candidateQuizData = QuizDataUtil.getQuizDataByIdx(this.quizDatas, this.currentQuizDataIdx)
+        this.nextQuizData = QuizDataUtil.getQuizDataByIdx(this.quizDatas, this.currentQuizDataIdx + 1)
+        this.prevQuizData = QuizDataUtil.getQuizDataByIdx(this.quizDatas, this.currentQuizDataIdx - 1)
       }
     }
   }

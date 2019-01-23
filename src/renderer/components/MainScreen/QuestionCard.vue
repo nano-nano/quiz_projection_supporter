@@ -1,26 +1,24 @@
 <template>
   <div>
-    <b-card v-bind:title="title" v-bind:sub-title="qId" class="qCard">
+    <b-card v-bind:title="title" v-bind:sub-title="this.qIdLabel" class="qCard">
       <p class="card-text">
-        {{qText}}
+        {{qTextLabel}}
       </p>
       <p class="card-text">
-        {{qAnswer}}
+        {{qAnswerLabel}}
       </p>
     </b-card>
   </div>
 </template>
 
 <script>
-  import QuizDataUtil from '../../logic/QuizDataUtil'
-
   export default {
-    props: ['title', 'qId', 'qTextSummary'],
+    props: ['title', 'qData', 'qTextSummary'],
     data () {
       return {
-        qText: '---',
-        qAnswer: '---',
-        summaryQText: '---'
+        qIdLabel: '---',
+        qTextLabel: '---',
+        qAnswerLabel: '---'
       }
     },
     methods: {
@@ -34,19 +32,15 @@
       }
     },
     watch: {
-      qId: function () {
-        if (this.qId == null) {
-          this.qText = '---'
-          this.qAnswer = '---'
+      qData: function () {
+        if (this.qData == null) {
+          this.qIdLabel = '---'
+          this.qTextLabel = '---'
+          this.qAnswerLabel = '---'
         } else {
-          const quizData = QuizDataUtil.getQuizDataFromQId(this.qId)
-          if (quizData == null) {
-            this.qText = '---'
-            this.qAnswer = '---'
-          } else {
-            this.qText = this.qTextSummary ? this.getSummaryText(quizData.qText) : quizData.qText
-            this.qAnswer = this.qTextSummary ? this.getSummaryText(quizData.qAnswer) : quizData.qAnswer
-          }
+          this.qIdLabel = this.qData.qId
+          this.qTextLabel = this.qTextSummary ? this.getSummaryText(this.qData.qText) : this.qData.qText
+          this.qAnswerLabel = this.qTextSummary ? this.getSummaryText(this.qData.qAnswer) : this.qData.qAnswer
         }
       }
     }

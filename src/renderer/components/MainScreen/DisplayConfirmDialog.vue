@@ -9,10 +9,8 @@
 </template>
 
 <script>
-  import QuizDataUtil from '../../logic/QuizDataUtil'
-
   export default {
-    props: ['qId'],
+    props: ['qData'],
     data () {
       return {
       }
@@ -24,7 +22,7 @@
     },
     computed: {
       quizData: function () {
-        return QuizDataUtil.getQuizDataFromQId(this.qId)
+        return this.qData == null ? {qText: '', qAnswer: ''} : this.qData
       }
     }
   }
