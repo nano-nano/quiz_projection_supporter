@@ -156,8 +156,12 @@
         this.sendMessageToPjWindow('displayQuizData', this.displayedQuizData)
       },
       onSelectQuestionIdDialogOk (newQId) {
-        this.currentQuizDataIdx = QuizDataUtil.getQuizDatasIdxByQId(this.quizDatas, newQId)
-        this.updateQuizSelectCards()
+        const idx = QuizDataUtil.getQuizDatasIdxByQId(this.quizDatas, newQId)
+        if (idx != -1) {
+          // 対応するindexがあった場合のみ更新
+          this.currentQuizDataIdx = idx
+          this.updateQuizSelectCards()
+        }
       },
       onClickNextBtn () {
         this.currentQuizDataIdx = QuizDataUtil.getNextIdx(this.quizDatas, this.currentQuizDataIdx)
