@@ -11,6 +11,7 @@
             </b-nav-item>
             <b-nav-item-dropdown text="PJ Setting">
               <b-dropdown-item href="#" v-b-modal.importQuizDataDialog>Load QuizData File</b-dropdown-item>
+              <b-dropdown-item href="#" v-b-modal.projectionSettingDialog>ProjectionScreen Setting</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
       </b-navbar>
@@ -85,12 +86,18 @@
 
     <div class="container">
       <!-- QuestionID選択ダイアログ -->
+      <!-- v-onは子コンポーネントからのイベントを受けるメソッドを定義する -->
       <select-question-id-dialog v-on:onOkClicked="onSelectQuestionIdDialogOk"></select-question-id-dialog>
       <!-- 投影確認ダイアログ -->
       <display-confirm-dialog v-bind:qData=candidateQuizData
         v-on:onOkClicked="onDisplayConfirmDialogOk"></display-confirm-dialog>
       <!-- 問題ファイルインポートダイアログ -->
       <import-quiz-data-dialog v-on:onOkClicked="onImportQuizDataDialogOk"></import-quiz-data-dialog>
+      <!-- 投影画面設定ダイアログ -->
+      <projection-setting-dialog v-on:onSizeChanged="onPjSettingDialogValueChange"></projection-setting-dialog>
+      <!-- メッセージ通知ダイアログ -->
+      <notification-dialog ref="notificationDialogComponent"
+        v-bind:message=dialogMsg v-on:onOkClicked="onNotificationDialogOk"></notification-dialog>
     </div>
   </div>
 </template>
@@ -101,9 +108,12 @@
   import SelectQuestionIdDialog from './MainScreen/SelectQuestionIdDialog'
   import DisplayConfirmDialog from './MainScreen/DisplayConfirmDialog'
   import ImportQuizDataDialog from './MainScreen/ImportQuizDataDialog'
+  import ProjectionSettingDialog from './MainScreen/ProjectionSettingDialog'
+  import NotificationDialog from './MainScreen/NotificationDialog'
   // 外だししているjsファイル
   import WindowUtil from '../logic/WindowUtil'
   import QuizDataUtil from '../logic/QuizDataUtil'
+  import JsonFileUtil from '../logic/JsonFileUtil'
 
   export default {
     name: 'main-screen',
@@ -111,7 +121,9 @@
       QuestionCard,
       SelectQuestionIdDialog,
       DisplayConfirmDialog,
-      ImportQuizDataDialog
+      ImportQuizDataDialog,
+      ProjectionSettingDialog,
+      NotificationDialog
     },
     data () {
       return {
@@ -122,7 +134,8 @@
         candidateQuizData: null,
         nextQuizData: null,
         prevQuizData: null,
-        isDisplayAnotherAnswers: false
+        isDisplayAnotherAnswers: false,
+        dialogMsg: null
       }
     },
     methods: {
@@ -161,6 +174,15 @@
         this.nextQuizData = QuizDataUtil.getQuizDataByIdx(this.quizDatas, this.currentQuizDataIdx + 1)
         this.prevQuizData = QuizDataUtil.getQuizDataByIdx(this.quizDatas, this.currentQuizDataIdx - 1)
       },
+      showNotificationDialog (message) {
+        this.dialogMsg = message
+        // MainScreenから見てNotificationDialog内のModalコンポーネントは2階層分深いので、重ねて参照させる
+        this.$refs.notificationDialogComponent.$refs.modal.show()
+      },
+      onNotificationDialogOk () {
+        // ダイアログ表示用メッセージ変数をリセットしておく
+        this.dialogMsg = ''
+      },
       onDisplayConfirmDialogOk () {
         this.displayedQuizData = this.candidateQuizData
         // ProjectionScreenへ表示する問題データを送信する処理
@@ -179,9 +201,14 @@
           this.quizDatas = quizDatas
           this.currentQuizDataIdx = 0
           this.updateQuizSelectCards()
+          this.showNotificationDialog('インポートが完了しました')
         }).catch((err) => {
           console.error(err)
+          this.showNotificationDialog('インポートに失敗しました')
         })
+      },
+      onPjSettingDialogValueChange (res) {
+        this.sendMessageToPjWindow('fontSizeChange', res)
       },
       sendMessageToPjWindow (channel, arg) {
         if (this.pjWindow != null) {
@@ -194,6 +221,16 @@
       isDisplayAnotherAnswers: function () {
         this.sendMessageToPjWindow('isDisplayAnotherAnswers', this.isDisplayAnotherAnswers)
       }
+    },
+    mounted: function () {
+      // 設定ファイルが無い場合にあらかじめ生成する
+      JsonFileUtil.loadFile('pjSetting').catch(() => {
+        JsonFileUtil.saveFile('pjSetting', {
+          qTextFontSize: 50,
+          qAnswerFontSize: 40,
+          qAnotherAnswerFontSize: 40
+        })
+      })
     }
   }
 </script>

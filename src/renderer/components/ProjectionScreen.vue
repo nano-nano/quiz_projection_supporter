@@ -2,20 +2,20 @@
   <div class="pjBase">
     <div class="container-flued">
       <b-card class="qTextCard">
-        <p class="card-text">
+        <p class="card-text" v-bind:style="{ fontSize: qTextFontSize + 'px' }">
             {{qText}}
         </p>
       </b-card>
 
       <div class="qAnswerArea">
         <b-card v-bind:class="[isDisplayAnotherAnswers ? 'qAnswerCard-AnotherAnswer' : 'qAnswerCard-WoAnotherAnswer']">
-          <p class="card-text">
+          <p class="card-text" v-bind:style="{ fontSize: qAnswerFontSize + 'px' }">
             {{qAnswer}}
           </p>
         </b-card>
 
         <b-card class="qAnotherAnswerCard" v-if="isDisplayAnotherAnswers">
-          <p class="card-text">
+          <p class="card-text" v-bind:style="{ fontSize: qAnotherAnswerFontSize + 'px' }">
             {{qAnotherAnswer}}
           </p>
         </b-card>
@@ -25,6 +25,8 @@
 </template>
 
 <script>
+  import JsonFileUtil from '../logic/JsonFileUtil'
+
   export default {
     props: ['qId'],
     data () {
@@ -32,8 +34,20 @@
         qText: '',
         qAnswer: '',
         qAnotherAnswer: '',
-        isDisplayAnotherAnswers: false
+        isDisplayAnotherAnswers: false,
+        qTextFontSize: 50,
+        qAnswerFontSize: 40,
+        qAnotherAnswerFontSize: 40
       }
+    },
+    created: function () {
+      JsonFileUtil.loadFile('pjSetting').then((data) => {
+        if (data != null) {
+          this.qTextFontSize = data.qTextFontSize
+          this.qAnswerFontSize = data.qAnswerFontSize
+          this.qAnotherAnswerFontSize = this.qAnotherAnswerFontSize
+        }
+      })
     },
     mounted: function () {
       const ipc = this.$electron.ipcRenderer
@@ -50,6 +64,11 @@
       })
       ipc.on('isDisplayAnotherAnswers', (event, arg) => {
         this.isDisplayAnotherAnswers = arg
+      })
+      ipc.on('fontSizeChange', (event, arg) => {
+        this.qTextFontSize = arg.qTextFontSize
+        this.qAnswerFontSize = arg.qAnswerFontSize
+        this.qAnotherAnswerFontSize = arg.qAnotherAnswerFontSize
       })
     }
   }
@@ -75,7 +94,6 @@
 
   .qTextCard {
     height: 64%;
-    font-size: 300%;
   }
 
   .qAnswerArea {
@@ -85,15 +103,12 @@
 
   .qAnswerCard-AnotherAnswer {
     height: 50%;
-    font-size: 250%;
   }
   .qAnswerCard-WoAnotherAnswer {
     height: 100%;
-    font-size: 250%;
   }
 
   .qAnotherAnswerCard {
     height: 50%;
-    font-size: 250%;
   }
 </style>
