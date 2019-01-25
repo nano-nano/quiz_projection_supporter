@@ -1,16 +1,55 @@
 'use strict'
 
+import XlsxPopulate from 'xlsx-populate'
+
 export default class QuizDataUtil {
-  static createQuizDatas () {
-    // ダミーデータ。実際にはExcelファイルロード処理を入れる
-    const quizDatas = [
-      {qId: '100', qText: '問題文１', qAnswer: '解答１', qAnotherAnswer: '別解１'},
-      {qId: '101', qText: '問題文２', qAnswer: '解答２', qAnotherAnswer: '別解２'},
-      {qId: '102', qText: '問題文３', qAnswer: '解答３', qAnotherAnswer: '別解３'},
-      {qId: '200', qText: '問題文４', qAnswer: '解答４', qAnotherAnswer: '別解４'},
-      {qId: '999', qText: '問題文４ほげほげほげほげほげほげほげ', qAnswer: '解答４ふがふがふがふが', qAnotherAnswer: '別解５'}
-    ]
-    return quizDatas
+  static createQuizDatas (filePath, password) {
+    let quizDatas = []
+    return XlsxPopulate.fromFileAsync(filePath, { password: password }).then(workbook => {
+      // 1枚目のシートを参照する
+      const sheet = workbook.sheet(0)
+      let qIdCell = sheet.cell('A2')
+      while (qIdCell.value() || qIdCell.value() === 0) {
+        // 空セル(undefined)が現れるまでループ
+        // undefinedはfalseを返すことを利用している（ただし、0もfalseを返してしまうので例外処理を追加）
+        quizDatas.push(this.createQuizData(qIdCell))
+        qIdCell = qIdCell.relativeCell(1, 0)
+      }
+      // サンプル問題生成
+      this.createLongestQuizData(quizDatas)
+      return quizDatas
+    })
+  }
+
+  static createQuizData (qIdCell) {
+    return {
+      qId: qIdCell.value(),
+      qText: qIdCell.relativeCell(0, 1).value(),
+      qAnswer: qIdCell.relativeCell(0, 2).value(),
+      qAnotherAnswer: (qIdCell.relativeCell(0, 3).value() || qIdCell.relativeCell(0, 3).value() === 0)
+        ? qIdCell.relativeCell(0, 3).value()
+        : ''
+    }
+  }
+
+  static createLongestQuizData (quizDatas) {
+    const longestTextSample = 'これはサンプル問題文・サンプル解答文です。問題ID: MAXの問題文には読み込まれた問題のうち最大字数相当の長さの文章が、解答文には読み込まれた解答のうち最大字数相当の長さの文章が自動的に設定されます。この最大字数の問題および解答がウィンドウ内で表示されるように、文字サイズや問題・解答の境界を調節してください。このサンプル問題およびサンプル解答を活用することで、表示テストを行うと同時に文字サイズや境界の調整を行いやすくなっています。投影の前にサンプル問題文およびサンプル解答を上手に活用ください。'
+    let longestQTextLength = 0
+    let longestQAnswerLength = 0
+    for (let quizData of quizDatas) {
+      if (longestQTextLength < quizData.qText.length) {
+        longestQTextLength = quizData.qText.length
+      }
+      if (longestQAnswerLength < quizData.qAnswer.length) {
+        longestQAnswerLength = quizData.qAnswer.length
+      }
+    }
+    quizDatas.unshift({
+      qId: 'MAX',
+      qText: longestTextSample.substr(0, longestQTextLength),
+      qAnswer: longestTextSample.substr(0, longestQAnswerLength),
+      qAnotherAnswer: ''
+    })
   }
 
   static getQuizDataByIdx (quizDatas, index) {
@@ -24,7 +63,7 @@ export default class QuizDataUtil {
   static getQuizDatasIdxByQId (quizDatas, qId) {
     let newIdx = 0
     for (let quizData of quizDatas) {
-      if (qId === quizData.qId) {
+      if (qId === quizData.qId.toString()) {
         return newIdx
       }
       newIdx++

@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-modal id="displayConfirmDialog" title="問題表示確認" @ok="onOkClicked()">
-      次の問題が表示されます。よろしいですか？
+      <p>次の問題が表示されます。よろしいですか？</p>
       <p>{{quizData.qText}}</p>
       <p>{{quizData.qAnswer}}</p>
     </b-modal>

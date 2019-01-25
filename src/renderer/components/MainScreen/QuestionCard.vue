@@ -22,10 +22,9 @@
       }
     },
     methods: {
-      getSummaryText (target) {
-        if (target.length > 8) {
-          // 先頭から8文字分だけ切り出して、残りを省略
-          return target.substr(0, 8) + '...'
+      getSubstringText (target, length) {
+        if (target.length > length) {
+          return target.substr(0, length) + '...'
         } else {
           return target
         }
@@ -38,9 +37,9 @@
           this.qTextLabel = '---'
           this.qAnswerLabel = '---'
         } else {
-          this.qIdLabel = this.qData.qId
-          this.qTextLabel = this.qTextSummary ? this.getSummaryText(this.qData.qText) : this.qData.qText
-          this.qAnswerLabel = this.qTextSummary ? this.getSummaryText(this.qData.qAnswer) : this.qData.qAnswer
+          this.qIdLabel = this.qData.qId.toString()
+          this.qTextLabel = this.qTextSummary ? this.getSubstringText(this.qData.qText, 8) : this.getSubstringText(this.qData.qText, 50)
+          this.qAnswerLabel = this.qTextSummary ? this.getSubstringText(this.qData.qAnswer, 8) : this.getSubstringText(this.qData.qAnswer, 50)
         }
       }
     }

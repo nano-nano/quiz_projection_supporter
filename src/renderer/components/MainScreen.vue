@@ -10,7 +10,7 @@
               {{(pjWindow == null) ? 'Open' : 'Close'}} PJ Screen
             </b-nav-item>
             <b-nav-item-dropdown text="PJ Setting">
-              <b-dropdown-item href="#" @click="onClickLoadQuizDataLink()">Load QuizData File</b-dropdown-item>
+              <b-dropdown-item href="#" v-b-modal.importQuizDataDialog>Load QuizData File</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
       </b-navbar>
@@ -89,6 +89,8 @@
       <!-- 投影確認ダイアログ -->
       <display-confirm-dialog v-bind:qData=candidateQuizData
         v-on:onOkClicked="onDisplayConfirmDialogOk"></display-confirm-dialog>
+      <!-- 問題ファイルインポートダイアログ -->
+      <import-quiz-data-dialog v-on:onOkClicked="onImportQuizDataDialogOk"></import-quiz-data-dialog>
     </div>
   </div>
 </template>
@@ -98,6 +100,7 @@
   import QuestionCard from './MainScreen/QuestionCard'
   import SelectQuestionIdDialog from './MainScreen/SelectQuestionIdDialog'
   import DisplayConfirmDialog from './MainScreen/DisplayConfirmDialog'
+  import ImportQuizDataDialog from './MainScreen/ImportQuizDataDialog'
   // 外だししているjsファイル
   import WindowUtil from '../logic/WindowUtil'
   import QuizDataUtil from '../logic/QuizDataUtil'
@@ -107,7 +110,8 @@
     components: {
       QuestionCard,
       SelectQuestionIdDialog,
-      DisplayConfirmDialog
+      DisplayConfirmDialog,
+      ImportQuizDataDialog
     },
     data () {
       return {
@@ -140,28 +144,9 @@
           this.pjWindow = null
         }
       },
-      onClickLoadQuizDataLink () {
-        // ダミー実装
-        this.quizDatas = QuizDataUtil.createQuizDatas()
-        this.currentQuizDataIdx = 0
-        this.updateQuizSelectCards()
-      },
-      onDisplayConfirmDialogOk () {
-        this.displayedQuizData = this.candidateQuizData
-        // ProjectionScreenへ表示する問題データを送信する処理
-        this.sendMessageToPjWindow('displayQuizData', this.displayedQuizData)
-      },
       onClickDisableQuestionBtn () {
         this.displayedQuizData = null
         this.sendMessageToPjWindow('displayQuizData', this.displayedQuizData)
-      },
-      onSelectQuestionIdDialogOk (newQId) {
-        const idx = QuizDataUtil.getQuizDatasIdxByQId(this.quizDatas, newQId)
-        if (idx != -1) {
-          // 対応するindexがあった場合のみ更新
-          this.currentQuizDataIdx = idx
-          this.updateQuizSelectCards()
-        }
       },
       onClickNextBtn () {
         this.currentQuizDataIdx = QuizDataUtil.getNextIdx(this.quizDatas, this.currentQuizDataIdx)
@@ -175,6 +160,28 @@
         this.candidateQuizData = QuizDataUtil.getQuizDataByIdx(this.quizDatas, this.currentQuizDataIdx)
         this.nextQuizData = QuizDataUtil.getQuizDataByIdx(this.quizDatas, this.currentQuizDataIdx + 1)
         this.prevQuizData = QuizDataUtil.getQuizDataByIdx(this.quizDatas, this.currentQuizDataIdx - 1)
+      },
+      onDisplayConfirmDialogOk () {
+        this.displayedQuizData = this.candidateQuizData
+        // ProjectionScreenへ表示する問題データを送信する処理
+        this.sendMessageToPjWindow('displayQuizData', this.displayedQuizData)
+      },
+      onSelectQuestionIdDialogOk (newQId) {
+        const idx = QuizDataUtil.getQuizDatasIdxByQId(this.quizDatas, newQId)
+        if (idx !== -1) {
+          // 対応するindexがあった場合のみ更新
+          this.currentQuizDataIdx = idx
+          this.updateQuizSelectCards()
+        }
+      },
+      onImportQuizDataDialogOk (res) {
+        QuizDataUtil.createQuizDatas(res.path, res.pass).then((quizDatas) => {
+          this.quizDatas = quizDatas
+          this.currentQuizDataIdx = 0
+          this.updateQuizSelectCards()
+        }).catch((err) => {
+          console.error(err)
+        })
       },
       sendMessageToPjWindow (channel, arg) {
         if (this.pjWindow != null) {
