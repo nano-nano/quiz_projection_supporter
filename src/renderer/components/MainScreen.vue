@@ -7,11 +7,11 @@
           <b-navbar-nav>
             <!-- '@click'は'v-on:click'イベントハンドラの省略形 -->
             <b-nav-item href="#" @click="onClickProjectionScreenLink()">
-              {{(pjWindow == null) ? 'Open' : 'Close'}} PJ Screen
+              投影画面を{{(pjWindow == null) ? '開く' : '閉じる'}}
             </b-nav-item>
-            <b-nav-item-dropdown text="PJ Setting">
-              <b-dropdown-item href="#" v-b-modal.importQuizDataDialog>Load QuizData File</b-dropdown-item>
-              <b-dropdown-item href="#" v-b-modal.projectionSettingDialog>ProjectionScreen Setting</b-dropdown-item>
+            <b-nav-item-dropdown text="設定">
+              <b-dropdown-item href="#" v-b-modal.importQuizDataDialog>問題データを読み込む</b-dropdown-item>
+              <b-dropdown-item href="#" v-b-modal.projectionSettingDialog>投影画面設定</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
       </b-navbar>
@@ -22,7 +22,7 @@
         <div class="col-8">
           <!-- 現在表示中の問題 -->
           <!-- 'v-bind:'で=の右側にあるdata要素とバインディングが可能になる -->
-          <question-card title="Current Displayed" v-bind:qData=displayedQuizData></question-card>
+          <question-card title="現在表示中" v-bind:qData=displayedQuizData></question-card>
         </div>
       </div>
 
@@ -33,52 +33,52 @@
       <div class="row justify-content-center">
         <div class="col-3">
           <!-- ひとつ前の問題 -->
-          <question-card title="Prev" v-bind:qData=prevQuizData qTextSummary=true></question-card>
+          <question-card title="ひとつ前" v-bind:qData=prevQuizData qTextSummary=true></question-card>
         </div>
 
         <div class="col-6 align-self-center">
           <!-- 表示候補の問題 -->
-          <question-card title="Displayed Candidate" v-bind:qData=candidateQuizData></question-card>
+          <question-card title="表示候補" v-bind:qData=candidateQuizData></question-card>
         </div>
 
         <div class="col-3">
           <!-- ひとつ次の問題 -->
-          <question-card title="Next" v-bind:qData=nextQuizData qTextSummary=true></question-card>
+          <question-card title="ひとつ次" v-bind:qData=nextQuizData qTextSummary=true></question-card>
         </div>
       </div>
 
       <div class="row justify-content-center buttonArea">
         <div class="col-3">
           <b-button size="lg" variant="outline-secondary" block @click="onClickPrevBtn()">
-            ＜＜ Prev
+            ＜＜ 前
           </b-button>
         </div>
 
         <div class="col-6">
           <p>
             <b-button size="lg" variant="primary" block :disabled="(candidateQuizData == null)" v-b-modal.displayConfirmDialog>
-              Show Candidate
+              投影画面へ表示
             </b-button>
           </p>
           <p class="text-center">
             <b-button size="lg" variant="outline-secondary" @click="onClickDisableQuestionBtn()">
-              Disable Question
+              投影画面の表示を消す
             </b-button>
             <b-button size="lg" variant="outline-secondary" v-b-modal.selectQuestionIdDialog>
-              Select by QuestionID
+              問題IDで選択
             </b-button>
           </p>
           <p>
             <!-- 'v-model'はdata要素とチェックボックスの状態を紐づけるためのディレクティブ -->
             <b-form-checkbox size="lg" v-model="isDisplayAnotherAnswers">
-              Display AnotherAnswers
+              別解を表示
             </b-form-checkbox>
           </p>
         </div>
 
         <div class="col-3">
           <b-button size="lg" variant="outline-secondary" block @click="onClickNextBtn()">
-            Next ＞＞
+            次 ＞＞
           </b-button>
         </div>
       </div>
