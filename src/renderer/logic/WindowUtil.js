@@ -9,7 +9,7 @@ export default class WindowUtil {
     // この実装は、src/main/index.jsの中にあるものをそのまま持ってきている
     const baseUrl = process.env.NODE_ENV === 'development'
       ? `http://localhost:9080`
-      : `file://${__dirname}`
+      : `file://${__dirname}/index.html`
     return baseUrl + targetPath
   }
 
