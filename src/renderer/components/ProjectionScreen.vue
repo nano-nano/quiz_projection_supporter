@@ -3,7 +3,7 @@
     <div class="container-flued">
       <b-card class="qTextCard" v-bind:style="{ backgroundColor: qBackgroundColor }">
         <p class="card-text" v-bind:style="{ fontSize: qTextFontSize + 'px', color: qStringColor }">
-            {{qText}}
+            {{(this.isDisplayQId && qId !== '') ? `【${qId}】` : ''}}{{qText}}
         </p>
       </b-card>
 
@@ -29,13 +29,14 @@
   import JsonFileUtil from '../logic/JsonFileUtil'
 
   export default {
-    props: ['qId'],
     data () {
       return {
+        qId: '',
         qText: '',
         qAnswer: '',
         qAnotherAnswer: '',
         isDisplayAnotherAnswers: false,
+        isDisplayQId: false,
         qTextFontSize: 50,
         qAnswerFontSize: 40,
         qAnotherAnswerFontSize: 40,
@@ -58,10 +59,12 @@
       const ipc = this.$electron.ipcRenderer
       ipc.on('displayQuizData', (event, arg) => {
         if (arg != null) {
+          this.qId = arg.qId
           this.qText = arg.qText
           this.qAnswer = arg.qAnswer
           this.qAnotherAnswer = arg.qAnotherAnswer
         } else {
+          this.qId = ''
           this.qText = ''
           this.qAnswer = ''
           this.qAnotherAnswer = ''
@@ -69,6 +72,9 @@
       })
       ipc.on('isDisplayAnotherAnswers', (event, arg) => {
         this.isDisplayAnotherAnswers = arg
+      })
+      ipc.on('isDisplayQId', (event, arg) => {
+        this.isDisplayQId = arg
       })
       ipc.on('fontSizeChange', (event, arg) => {
         this.qTextFontSize = arg.qTextFontSize

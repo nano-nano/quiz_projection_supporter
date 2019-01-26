@@ -73,6 +73,9 @@
             <b-form-checkbox size="lg" v-model="isDisplayAnotherAnswers">
               別解を表示
             </b-form-checkbox>
+            <b-form-checkbox size="lg" v-model="isDisplayQId">
+              問題IDを表示
+            </b-form-checkbox>
           </p>
         </div>
 
@@ -136,6 +139,7 @@
         nextQuizData: null,
         prevQuizData: null,
         isDisplayAnotherAnswers: false,
+        isDisplayQId: false,
         dialogMsg: null
       }
     },
@@ -224,6 +228,9 @@
     watch: {
       isDisplayAnotherAnswers: function () {
         this.sendMessageToPjWindow('isDisplayAnotherAnswers', this.isDisplayAnotherAnswers)
+      },
+      isDisplayQId: function () {
+        this.sendMessageToPjWindow('isDisplayQId', this.isDisplayQId)
       }
     },
     mounted: function () {

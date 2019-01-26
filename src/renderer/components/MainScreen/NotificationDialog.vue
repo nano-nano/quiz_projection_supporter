@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal ref="modal" hide-header>
+    <b-modal ref="modal" hide-header ok-only>
       <p>{{message}}</p>
     </b-modal>
   </div>
