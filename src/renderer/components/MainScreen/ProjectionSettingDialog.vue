@@ -10,6 +10,12 @@
       <b-form-group label="別解フォントサイズ" horizontal :label-cols="6">
         <b-form-input v-model="qAnotherAnswerFontSize" type="number"></b-form-input>
       </b-form-group>
+      <b-form-group label="投影文字色" horizontal :label-cols="6">
+        <b-form-input v-model="qStringColor" type="color"></b-form-input>
+      </b-form-group>
+      <b-form-group label="投影背景色" horizontal :label-cols="6">
+        <b-form-input v-model="qBackgroundColor" type="color"></b-form-input>
+      </b-form-group>
     </b-modal>
   </div>
 </template>
@@ -22,7 +28,9 @@
       return {
         qTextFontSize: 50,
         qAnswerFontSize: 40,
-        qAnotherAnswerFontSize: 40
+        qAnotherAnswerFontSize: 40,
+        qStringColor: '#000000',
+        qBackgroundColor: '#ffffff'
       }
     },
     methods: {
@@ -34,6 +42,13 @@
         })
         this.saveSetting()
       },
+      onColorChanged () {
+        this.$emit('onColorChanged', {
+          qStringColor: this.qStringColor,
+          qBackgroundColor: this.qBackgroundColor
+        })
+        this.saveSetting()
+      },
       onOkClicked () {
         this.saveSetting()
       },
@@ -41,7 +56,9 @@
         JsonFileUtil.saveFile('pjSetting', {
           qTextFontSize: parseInt(this.qTextFontSize),
           qAnswerFontSize: parseInt(this.qAnswerFontSize),
-          qAnotherAnswerFontSize: parseInt(this.qAnotherAnswerFontSize)
+          qAnotherAnswerFontSize: parseInt(this.qAnotherAnswerFontSize),
+          qStringColor: this.qStringColor,
+          qBackgroundColor: this.qBackgroundColor
         })
       }
     },
@@ -50,7 +67,9 @@
         if (data != null) {
           this.qTextFontSize = data.qTextFontSize
           this.qAnswerFontSize = data.qAnswerFontSize
-          this.qAnotherAnswerFontSize = this.qAnotherAnswerFontSize
+          this.qAnotherAnswerFontSize = data.qAnotherAnswerFontSize
+          this.qStringColor = data.qStringColor
+          this.qBackgroundColor = data.qBackgroundColor
         }
       })
     },
@@ -63,6 +82,12 @@
       },
       qAnotherAnswerFontSize: function () {
         this.onSizeChanged()
+      },
+      qStringColor: function () {
+        this.onColorChanged()
+      },
+      qBackgroundColor: function () {
+        this.onColorChanged()
       }
     }
   }

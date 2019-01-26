@@ -94,7 +94,8 @@
       <!-- 問題ファイルインポートダイアログ -->
       <import-quiz-data-dialog v-on:onOkClicked="onImportQuizDataDialogOk"></import-quiz-data-dialog>
       <!-- 投影画面設定ダイアログ -->
-      <projection-setting-dialog v-on:onSizeChanged="onPjSettingDialogValueChange"></projection-setting-dialog>
+      <projection-setting-dialog v-on:onSizeChanged="onPjSettingDialogFontSizeChange"
+        v-on:onColorChanged="onPjSettingDialogColorChange"></projection-setting-dialog>
       <!-- メッセージ通知ダイアログ -->
       <notification-dialog ref="notificationDialogComponent"
         v-bind:message=dialogMsg v-on:onOkClicked="onNotificationDialogOk"></notification-dialog>
@@ -207,8 +208,11 @@
           this.showNotificationDialog('インポートに失敗しました')
         })
       },
-      onPjSettingDialogValueChange (res) {
+      onPjSettingDialogFontSizeChange (res) {
         this.sendMessageToPjWindow('fontSizeChange', res)
+      },
+      onPjSettingDialogColorChange (res) {
+        this.sendMessageToPjWindow('colorChange', res)
       },
       sendMessageToPjWindow (channel, arg) {
         if (this.pjWindow != null) {
@@ -228,7 +232,9 @@
         JsonFileUtil.saveFile('pjSetting', {
           qTextFontSize: 50,
           qAnswerFontSize: 40,
-          qAnotherAnswerFontSize: 40
+          qAnotherAnswerFontSize: 40,
+          qStringColor: '#000000',
+          qBackgroundColor: '#ffffff'
         })
       })
     }
