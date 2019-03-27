@@ -28,7 +28,7 @@ Quiz Projection Supporterは、
 プログラム本体については [MIT License](https://github.com/tcnksm/tool/blob/master/LICENCE) です。
 
 サンプル問題データ（quiz_sample_from_STU.xlsx）については、
-学生向けクイズ大会「STU」実行委員会 https://www.stu-vwx-union.com/ より許可を得て収録したものであり、
+学生向けクイズ大会「STU XX」実行委員会 https://www.stu-vwx-union.com/ より許可を得て収録したものであり、
 改変ならびに再配布はできません。
 
 本プログラムには次の成果物が含まれています。各成果物のライセンス等は個々のサイトを参照してください。
