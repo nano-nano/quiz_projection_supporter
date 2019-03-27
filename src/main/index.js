@@ -20,9 +20,10 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
+    // 初期画面のサイズ等はここで規定する
+    width: 1150,
     height: 750,
-    useContentSize: true,
-    width: 1150
+    useContentSize: true
   })
 
   mainWindow.loadURL(winURL)

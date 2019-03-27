@@ -68,7 +68,7 @@
               問題IDで選択
             </b-button>
           </p>
-          <p>
+          <div class="form-inline">
             <!-- 'v-model'はdata要素とチェックボックスの状態を紐づけるためのディレクティブ -->
             <b-form-checkbox size="lg" v-model="isDisplayAnotherAnswers">
               別解を表示
@@ -76,7 +76,7 @@
             <b-form-checkbox size="lg" v-model="isDisplayQId">
               問題IDを表示
             </b-form-checkbox>
-          </p>
+          </div>
         </div>
 
         <div class="col-3">

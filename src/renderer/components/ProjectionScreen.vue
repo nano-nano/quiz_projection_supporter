@@ -1,6 +1,7 @@
 <template>
   <div class="pjBase">
     <div class="container-flued">
+      <!-- 問題文表示エリア -->
       <b-card class="qTextCard" v-bind:style="{ backgroundColor: qBackgroundColor }">
         <p class="card-text" v-bind:style="{ fontSize: qTextFontSize + 'px', color: qStringColor }">
             {{(this.isDisplayQId && qId !== '') ? `【${qId}】` : ''}}{{qText}}
@@ -8,6 +9,7 @@
       </b-card>
 
       <div class="qAnswerArea">
+        <!-- 解凍表示エリア -->
         <b-card v-bind:class="[isDisplayAnotherAnswers ? 'qAnswerCard-AnotherAnswer' : 'qAnswerCard-WoAnotherAnswer']"
            v-bind:style="{ backgroundColor: qBackgroundColor }">
           <p class="card-text" v-bind:style="{ fontSize: qAnswerFontSize + 'px', color: qStringColor }">
@@ -15,6 +17,7 @@
           </p>
         </b-card>
 
+        <!-- 別解表示エリア -->
         <b-card class="qAnotherAnswerCard" v-if="isDisplayAnotherAnswers" v-bind:style="{ backgroundColor: qBackgroundColor }">
           <p class="card-text" v-bind:style="{ fontSize: qAnotherAnswerFontSize + 'px', color: qStringColor }">
             {{qAnotherAnswer}}

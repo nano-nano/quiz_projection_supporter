@@ -3,7 +3,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
-// bootstrapを使えるようにimportする
+// bootstrap-vueを使えるようにimportする
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap-honoka/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'

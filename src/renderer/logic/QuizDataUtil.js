@@ -10,12 +10,12 @@ export default class QuizDataUtil {
       const sheet = workbook.sheet(0)
       let qIdCell = sheet.cell('A2')
       while (qIdCell.value() || qIdCell.value() === 0) {
-        // 空セル(undefined)が現れるまでループ
+        // 問題ID列に空セル(undefined)が現れるまでループ
         // undefinedはfalseを返すことを利用している（ただし、0もfalseを返してしまうので例外処理を追加）
         quizDatas.push(this.createQuizData(qIdCell))
         qIdCell = qIdCell.relativeCell(1, 0)
       }
-      // サンプル問題生成
+      // サンプル問題（文字数確認用）生成
       this.createLongestQuizData(quizDatas)
       return quizDatas
     })
@@ -44,6 +44,7 @@ export default class QuizDataUtil {
         longestQAnswerLength = quizData.qAnswer.length
       }
     }
+    // 文字数確認用サンプルは必ず問題データの先頭に追加する
     quizDatas.unshift({
       qId: 'MAX',
       qText: longestTextSample.substr(0, longestQTextLength),
