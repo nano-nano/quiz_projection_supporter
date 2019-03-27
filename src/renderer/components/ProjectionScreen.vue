@@ -9,7 +9,7 @@
       </b-card>
 
       <div class="qAnswerArea">
-        <!-- 解凍表示エリア -->
+        <!-- 解答表示エリア -->
         <b-card v-bind:class="[isDisplayAnotherAnswers ? 'qAnswerCard-AnotherAnswer' : 'qAnswerCard-WoAnotherAnswer']"
            v-bind:style="{ backgroundColor: qBackgroundColor }">
           <p class="card-text" v-bind:style="{ fontSize: qAnswerFontSize + 'px', color: qStringColor }">
@@ -128,5 +128,9 @@
 
   .qAnotherAnswerCard {
     height: 50%;
+  }
+
+  .card-body {
+    padding: 10px;
   }
 </style>
