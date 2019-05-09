@@ -1,6 +1,12 @@
 Quiz Projection Supporter
 ===
 
+## お知らせ
+
+技術書典6で頒布した『実践で学ぶ！Electron+Vue.jsでデスクトップアプリ開発』での内容については、
+stable-tbf6ブランチ https://github.com/nano-nano/quiz_projection_supporter/tree/stable-tbf6 をご覧下さい。
+
+
 ## これはなに？
 
 Quiz Projection Supporterは、
