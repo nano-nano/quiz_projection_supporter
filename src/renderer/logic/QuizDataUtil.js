@@ -24,11 +24,20 @@ export default class QuizDataUtil {
   static createQuizData (qIdCell) {
     return {
       qId: qIdCell.value(),
-      qText: qIdCell.relativeCell(0, 1).value(),
-      qAnswer: qIdCell.relativeCell(0, 2).value(),
-      qAnotherAnswer: (qIdCell.relativeCell(0, 3).value() || qIdCell.relativeCell(0, 3).value() === 0)
+      qText: this.formatImportedText(qIdCell.relativeCell(0, 1).value()),
+      qAnswer: this.formatImportedText(qIdCell.relativeCell(0, 2).value()),
+      qAnotherAnswer: this.formatImportedText((qIdCell.relativeCell(0, 3).value() || qIdCell.relativeCell(0, 3).value() === 0)
         ? qIdCell.relativeCell(0, 3).value()
-        : ''
+        : '')
+    }
+  }
+
+  static formatImportedText (target) {
+    if (Array.isArray(target)) {
+      // セル内の文字の一部に書式が設定されているような場合、こちらのフローに入る
+      return target.filter(prop => prop.name === 'r').map(r => r.children.filter(prop => prop.name === 't')[0].children[0]).join('')
+    } else {
+      return target
     }
   }
 
