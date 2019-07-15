@@ -22,7 +22,7 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     // 初期画面のサイズ等はここで規定する
     width: 1150,
-    height: 750,
+    height: 790,
     useContentSize: true
   })
 
