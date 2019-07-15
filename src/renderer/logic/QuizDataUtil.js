@@ -82,19 +82,20 @@ export default class QuizDataUtil {
     return -1
   }
 
-  static getNextIdx (quizDatas, currentIdx) {
+  static getNextIdx (quizDatas, currentIdx, isLoop) {
     if (quizDatas.length > (currentIdx + 1)) {
       return (currentIdx + 1)
     } else {
-      return currentIdx
+      // ループする設定の場合は2番目の問題idxに（1番目は文字数MAX表示用）
+      return isLoop ? 1 : currentIdx
     }
   }
 
-  static getPrevIdx (currentIdx) {
+  static getPrevIdx (quizDatas, currentIdx, isLoop) {
     if ((currentIdx - 1) >= 0) {
       return (currentIdx - 1)
     } else {
-      return currentIdx
+      return isLoop ? (quizDatas.length - 1) : currentIdx
     }
   }
 }

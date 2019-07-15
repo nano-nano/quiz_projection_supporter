@@ -76,6 +76,10 @@
             <b-form-checkbox size="lg" v-model="isDisplayQId">
               問題IDを表示
             </b-form-checkbox>
+            <b-form-checkbox size="lg" v-model="isLoopSelection"
+              v-b-tooltip.hover title="最初と最後の問題の間を[<<前][次>>]ボタンで行き来できるようにします">
+              問題選択をループする
+            </b-form-checkbox>
           </div>
         </div>
 
@@ -140,6 +144,7 @@
         prevQuizData: null,
         isDisplayAnotherAnswers: false,
         isDisplayQId: false,
+        isLoopSelection: false,
         dialogMsg: null
       }
     },
@@ -167,11 +172,11 @@
         this.sendMessageToPjWindow('displayQuizData', this.displayedQuizData)
       },
       onClickNextBtn () {
-        this.currentQuizDataIdx = QuizDataUtil.getNextIdx(this.quizDatas, this.currentQuizDataIdx)
+        this.currentQuizDataIdx = QuizDataUtil.getNextIdx(this.quizDatas, this.currentQuizDataIdx, this.isLoopSelection)
         this.updateQuizSelectCards()
       },
       onClickPrevBtn () {
-        this.currentQuizDataIdx = QuizDataUtil.getPrevIdx(this.currentQuizDataIdx)
+        this.currentQuizDataIdx = QuizDataUtil.getPrevIdx(this.quizDatas, this.currentQuizDataIdx, this.isLoopSelection)
         this.updateQuizSelectCards()
       },
       updateQuizSelectCards () {
