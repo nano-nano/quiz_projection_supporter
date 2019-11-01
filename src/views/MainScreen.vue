@@ -9,7 +9,7 @@
           </b-nav-item>
           <b-nav-item-dropdown text="設定">
             <b-dropdown-item href="#" v-b-modal.importQuizDataDialog>問題データを読み込む</b-dropdown-item>
-            <b-dropdown-item href="#" >投影画面設定</b-dropdown-item>
+            <b-dropdown-item href="#" v-b-modal.projectionSettingDialog>投影画面設定</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
     </b-navbar>
@@ -89,7 +89,7 @@
 
     <import-quiz-data-dialog @onOkClicked="onImportQuizDataDialogOkClicked"></import-quiz-data-dialog>
     <select-question-id-dialog @onOkClicked="onSelectQuestionIdDialogOk"></select-question-id-dialog>
-
+    <projection-setting-dialog @onSizeChanged="onPjSettingDialogFontSizeChange" @onColorChanged="onPjSettingDialogColorChange"></projection-setting-dialog>
   </div>
 </template>
 
@@ -97,8 +97,12 @@
 import QuestionCard from '@/components/QuestionCard.vue'
 import ImportQuizDataDialog from '@/components/ImportQuizDataDialog.vue'
 import SelectQuestionIdDialog from '@/components/SelectQuestionIdDialog.vue'
+import ProjectionSettingDialog from '@/components/ProjectionSettingDialog.vue'
 
 import QuizDataUtils from '@/utils/QuizDataUtils.js'
+import JsonFileUtil from '@/utils/JsonFileUtils.js'
+
+import Constants from '@/Constants.js'
 
 export default {
   name: 'main-screen',
@@ -106,6 +110,7 @@ export default {
     QuestionCard,
     ImportQuizDataDialog,
     SelectQuestionIdDialog,
+    ProjectionSettingDialog,
   },
   data() {
     return {
@@ -152,6 +157,14 @@ export default {
         this.updateQuizSelectCards()
       }
     },
+    onPjSettingDialogFontSizeChange(res) {
+      console.debug(res)
+      // this.sendMessageToPjWindow('fontSizeChange', res)
+    },
+    onPjSettingDialogColorChange(res) {
+      console.debug(res)
+      // this.sendMessageToPjWindow('colorChange', res)
+    },
     updateQuizSelectCards() {
       this.candidateQuizData = QuizDataUtils.getQuizDataByIdx(this.quizDataArray, this.currentQuizDataIdx)
       this.nextQuizData = QuizDataUtils.getQuizDataByIdx(this.quizDataArray, this.currentQuizDataIdx + 1)
@@ -162,7 +175,16 @@ export default {
 
   },
   mounted: function() {
-
+    // 設定ファイルが無い場合にあらかじめ生成する
+    JsonFileUtil.loadFile(Constants.PJ_SETTING_FILE_NAME).catch(() => {
+      JsonFileUtil.saveFile(Constants.PJ_SETTING_FILE_NAME, {
+        qTextFontSize: 50,
+        qAnswerFontSize: 40,
+        qAnotherAnswerFontSize: 40,
+        qStringColor: '#000000',
+        qBackgroundColor: '#ffffff'
+      })
+    })
   }
 }
 </script>
