@@ -43,8 +43,8 @@ export default {
         this.qAnswerLabel = '---'
       } else {
         this.qIdLabel = this.qData.qId.toString()
-        this.qTextLabel = this.getSubstringText(this.qData.qText, this.summaryDisplay ? 8 : 50)
-        this.qAnswerLabel = this.getSubstringText(this.qData.qAnswer, this.summaryDisplay ? 8 : 50)
+        this.qTextLabel = this.getSubstringText(this.qData.qText, this.summaryDisplay ? 10 : 50)
+        this.qAnswerLabel = this.getSubstringText(this.qData.qAnswer, this.summaryDisplay ? 10 : 50)
       }
     }
   }

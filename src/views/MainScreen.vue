@@ -8,7 +8,7 @@
             投影画面を{{(pjWindow == null) ? '開く' : '閉じる'}}
           </b-nav-item>
           <b-nav-item-dropdown text="設定">
-            <b-dropdown-item href="#" >問題データを読み込む</b-dropdown-item>
+            <b-dropdown-item href="#" v-b-modal.importQuizDataDialog>問題データを読み込む</b-dropdown-item>
             <b-dropdown-item href="#" >投影画面設定</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
@@ -45,7 +45,7 @@
       <!-- 問題送り/戻し操作UI -->
       <b-row align-h="center" class="button-area">
         <b-col cols="3">
-          <b-button size="lg" variant="outline-secondary" block>
+          <b-button size="lg" variant="outline-secondary" block @click="onClickPrevBtn()">
             ＜＜ 前
           </b-button>
         </b-col>
@@ -57,7 +57,7 @@
           </p>
         </b-col>
         <b-col cols="3">
-          <b-button size="lg" variant="outline-secondary" block>
+          <b-button size="lg" variant="outline-secondary" block @click="onClickNextBtn()">
             次 ＞＞
           </b-button>
         </b-col>
@@ -68,7 +68,7 @@
           <b-button variant="outline-secondary" size="lg" block>投影画面の表示を消す</b-button>
         </b-col>
         <b-col cols="2">
-          <b-button variant="outline-secondary" size="lg" block>問題IDで選択</b-button>
+          <b-button variant="outline-secondary" size="lg" block v-b-modal.selectQuestionIdDialog>問題IDで選択</b-button>
         </b-col>
       </b-row>
 
@@ -86,16 +86,26 @@
         </b-col>
       </b-row>
     </div>
+
+    <import-quiz-data-dialog @onOkClicked="onImportQuizDataDialogOkClicked"></import-quiz-data-dialog>
+    <select-question-id-dialog @onOkClicked="onSelectQuestionIdDialogOk"></select-question-id-dialog>
+
   </div>
 </template>
 
 <script>
 import QuestionCard from '@/components/QuestionCard.vue'
+import ImportQuizDataDialog from '@/components/ImportQuizDataDialog.vue'
+import SelectQuestionIdDialog from '@/components/SelectQuestionIdDialog.vue'
+
+import QuizDataUtils from '@/utils/QuizDataUtils.js'
 
 export default {
   name: 'main-screen',
   components: {
     QuestionCard,
+    ImportQuizDataDialog,
+    SelectQuestionIdDialog,
   },
   data() {
     return {
@@ -113,7 +123,40 @@ export default {
     }
   },
   methods: {
-
+    onClickNextBtn() {
+      this.currentQuizDataIdx = QuizDataUtils.getNextIdx(this.quizDataArray, this.currentQuizDataIdx, this.isLoopSelection)
+      this.updateQuizSelectCards()
+    },
+    onClickPrevBtn() {
+      this.currentQuizDataIdx = QuizDataUtils.getPrevIdx(this.quizDataArray, this.currentQuizDataIdx, this.isLoopSelection)
+      this.updateQuizSelectCards()
+    },
+    onImportQuizDataDialogOkClicked(res) {
+      QuizDataUtils.createQuizDatas(res.path, res.pass).then((data) => {
+        // インポートに成功
+        this.quizDataArray = data
+        this.currentQuizDataIdx = 0
+        this.updateQuizSelectCards()
+        this.$bvModal.msgBoxOk('インポートが完了しました')
+      }).catch((err) => {
+        // インポートに失敗
+        console.error(`import failed: ${err}`)
+        this.$bvModal.msgBoxOk('インポートに失敗しました')
+      })
+    },
+    onSelectQuestionIdDialogOk(newQId) {
+      const idx = QuizDataUtils.getQuizDatasIdxByQId(this.quizDataArray, newQId)
+      if (idx !== -1) {
+        // 対応するindexがあった場合のみ更新
+        this.currentQuizDataIdx = idx
+        this.updateQuizSelectCards()
+      }
+    },
+    updateQuizSelectCards() {
+      this.candidateQuizData = QuizDataUtils.getQuizDataByIdx(this.quizDataArray, this.currentQuizDataIdx)
+      this.nextQuizData = QuizDataUtils.getQuizDataByIdx(this.quizDataArray, this.currentQuizDataIdx + 1)
+      this.prevQuizData = QuizDataUtils.getQuizDataByIdx(this.quizDataArray, this.currentQuizDataIdx - 1)
+    },
   },
   watch: {
 
