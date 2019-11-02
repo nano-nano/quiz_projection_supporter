@@ -1,10 +1,10 @@
-Quiz Projection Supporter
-===
+# Quiz Projection Supporter
 
-## お知らせ
 
-技術書典6で頒布した『実践で学ぶ！Electron+Vue.jsでデスクトップアプリ開発』での内容については、
-stable-tbf6ブランチ https://github.com/nano-nano/quiz_projection_supporter/tree/stable-tbf6 をご覧下さい。
+## ※お知らせ※
+
+技術書典6で頒布した『実践で学ぶ！Electron+Vue.jsでデスクトップアプリ開発』の内容に対応したコードは、
+***stable-tbf6ブランチ*** https://github.com/nano-nano/quiz_projection_supporter/tree/stable-tbf6 をご覧下さい。
 
 
 ## これはなに？
@@ -13,8 +13,7 @@ Quiz Projection Supporterは、
 オフラインで開催される早押しクイズ大会で観客に対して問題文と解答を投影する専用の画面を提供し、
 問題フォロー業務を補助するプログラムです。
 
-
-## 機能
+## 主な機能
 
 本プログラムには次の機能があります。
 
@@ -23,11 +22,9 @@ Quiz Projection Supporterは、
  - ボタンでの表示候補送り/戻しや、問題に指定されたIDを利用した表示候補選択ができます
  - 投影画面のフォントサイズ、色は自由に選択することができます
 
-
 ## 使い方
 
 準備中...
-
 
 ## ライセンス
 
@@ -37,30 +34,6 @@ Quiz Projection Supporterは、
 学生向けクイズ大会「STU XX」実行委員会 https://www.stu-vwx-union.com/ より許可を得て収録したものであり、
 改変ならびに再配布はできません。
 
-本プログラムには次の成果物が含まれています。各成果物のライセンス等は個々のサイトを参照してください。
-
-**Vue.js**
-https://vuejs.org/
-
-**electron-vue**
-https://github.com/SimulatedGREG/electron-vue
-
-**Vue Router**
-https://router.vuejs.org/
-
-**Honoka**
-http://honokak.osaka/
-
-**BootstrapVue**
-https://bootstrap-vue.js.org/
-
-**fs-extra**
-https://github.com/jprichardson/node-fs-extra
-
-**xlsx-populate**
-https://github.com/dtjohnson/xlsx-populate
-
-
 ## 作者
 
 Nano-Nano
@@ -68,22 +41,16 @@ Nano-Nano
 
 ---
 
-## 開発者向け情報
-
 ### ビルドコマンド
 
 ``` bash
 # 依存関係のインストール
-npm install / yarn
+$ yarn install
 
 # 開発用モードで起動
-npm run dev / yarn run dev
+$ yarn electron:serve
 
-# リリース用ビルド（インストーラー）
-npm run build / yarn run build
+# リリース用ビルド
+$ yarn electron:build
 
-# リリース用ビルド（インストーラー無し）
-npm run build:dir / yarn run build:dir
 ```
-
-
