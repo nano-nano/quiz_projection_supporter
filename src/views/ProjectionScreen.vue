@@ -20,7 +20,7 @@
         <!-- 別解表示エリア -->
         <b-card class="qAnotherAnswerCard" v-if="isDisplayAnotherAnswers" :style="{ backgroundColor: qBackgroundColor }">
           <p class="card-text" :style="{ fontSize: qAnotherAnswerFontSize + 'px', color: qStringColor }">
-            【別解】{{qAnotherAnswer}}
+            {{qAnotherAnswer}}
           </p>
         </b-card>
       </div>
@@ -68,7 +68,7 @@ export default {
         this.qId = arg.qId
         this.qText = arg.qText
         this.qAnswer = arg.qAnswer
-        this.qAnotherAnswer = arg.qAnotherAnswer
+        this.qAnotherAnswer = (arg.qAnotherAnswer == '' ? '' : '【別解】' + arg.qAnotherAnswer)
       } else {
         this.qId = ''
         this.qText = ''

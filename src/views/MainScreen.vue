@@ -15,7 +15,7 @@
     </b-navbar>
 
     <!-- メインUI -->
-    <div class="main-ui-area">
+    <b-container fluid>
       <b-row align-h="center">
         <!-- 現在表示中の問題 -->
         <div class="col-8">
@@ -86,7 +86,7 @@
            title="最初と最後の問題の間を[<<前][次>>]ボタンで行き来できるようにします">問題選択をループする</b-form-checkbox>
         </b-col>
       </b-row>
-    </div>
+    </b-container>
 
     <import-quiz-data-dialog @onOkClicked="onImportQuizDataDialogOkClicked"></import-quiz-data-dialog>
     <select-question-id-dialog @onOkClicked="onSelectQuestionIdDialogOk"></select-question-id-dialog>
@@ -240,9 +240,6 @@ export default {
 </script>
 
 <style scoped>
-.main-ui-area {
-  margin: 10px;
-}
 .to-up-triangles {
   font-size: 200%;
 }
