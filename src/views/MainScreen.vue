@@ -182,9 +182,8 @@ export default {
         this.currentQuizDataIdx = 0
         this.updateQuizSelectCards()
         this.$bvModal.msgBoxOk('インポートが完了しました')
-      }).catch((err) => {
+      }).catch(() => {
         // インポートに失敗
-        console.error(`import failed: ${err}`)
         this.$bvModal.msgBoxOk('インポートに失敗しました')
       })
     },
@@ -197,11 +196,9 @@ export default {
       }
     },
     onPjSettingDialogFontSizeChange(res) {
-      console.debug(res)
       this.sendMessageToPjWindow('fontSizeChange', res)
     },
     onPjSettingDialogColorChange(res) {
-      console.debug(res)
       this.sendMessageToPjWindow('colorChange', res)
     },
     updateQuizSelectCards() {
