@@ -19,7 +19,7 @@
       <b-row align-h="center">
         <!-- 現在表示中の問題 -->
         <div class="col-8">
-          <question-card title="現在表示中" :qData="displayedQuizData"></question-card>
+          <question-card title="現在表示中" :qData="displayedQuizData" anotherNotice></question-card>
         </div>
       </b-row>
 
@@ -34,7 +34,7 @@
         </b-col>
         <!-- 表示候補の問題 -->
         <b-col cols="6" class="align-self-center">
-          <question-card title="表示候補" :qData="candidateQuizData"></question-card>
+          <question-card title="表示候補" :qData="candidateQuizData" anotherNotice></question-card>
         </b-col>
         <!-- ひとつ次の問題 -->
         <b-col cols="3">
@@ -51,7 +51,8 @@
         </b-col>
         <b-col cols="6">
           <p>
-            <b-button size="lg" variant="primary" block :disabled="(candidateQuizData == null)" v-b-modal.displayConfirmDialog>
+            <b-button size="lg" variant="primary" block :disabled="(candidateQuizData == null || pjWindow == null)"
+             v-b-modal.displayConfirmDialog>
               投影画面へ表示
             </b-button>
           </p>
@@ -148,6 +149,8 @@ export default {
         this.pjWindow.on('closed', () => {
           // ウィンドウが閉じられたらインスタンスもnullにしておく
           this.pjWindow = null
+          // 表示中問題も消去
+          this.displayedQuizData = null
         })
       } else {
         // 投影ウィンドウが開いている
@@ -163,7 +166,7 @@ export default {
       this.currentQuizDataIdx = QuizDataUtils.getPrevIdx(this.quizDataArray, this.currentQuizDataIdx, this.isLoopSelection)
       this.updateQuizSelectCards()
     },
-    onClickDisableQuestionBtn () {
+    onClickDisableQuestionBtn() {
       this.displayedQuizData = null
       this.sendMessageToPjWindow('displayQuizData', this.displayedQuizData)
     },

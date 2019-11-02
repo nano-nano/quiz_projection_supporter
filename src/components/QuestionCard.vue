@@ -17,7 +17,8 @@ export default {
   props: {
     title: String,
     qData: Object,
-    summaryDisplay: Boolean
+    summaryDisplay: Boolean,
+    anotherNotice: Boolean
   },
   data () {
     return {
@@ -45,6 +46,7 @@ export default {
         this.qIdLabel = this.qData.qId.toString()
         this.qTextLabel = this.getSubstringText(this.qData.qText, this.summaryDisplay ? 10 : 50)
         this.qAnswerLabel = this.getSubstringText(this.qData.qAnswer, this.summaryDisplay ? 10 : 50)
+         + (this.qData.qAnotherAnswer != '' && this.anotherNotice ? '【別解あり】' : '')
       }
     }
   }

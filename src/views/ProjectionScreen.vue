@@ -20,7 +20,7 @@
         <!-- 別解表示エリア -->
         <b-card class="qAnotherAnswerCard" v-if="isDisplayAnotherAnswers" :style="{ backgroundColor: qBackgroundColor }">
           <p class="card-text" :style="{ fontSize: qAnotherAnswerFontSize + 'px', color: qStringColor }">
-            {{qAnotherAnswer}}
+            【別解】{{qAnotherAnswer}}
           </p>
         </b-card>
       </div>
