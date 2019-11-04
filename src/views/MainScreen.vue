@@ -15,7 +15,7 @@
     </b-navbar>
 
     <!-- メインUI -->
-    <b-container fluid>
+    <b-container fluid class="main-ui-area">
       <b-row align-h="center">
         <!-- 現在表示中の問題 -->
         <div class="col-8">
@@ -237,6 +237,9 @@ export default {
 </script>
 
 <style scoped>
+.main-ui-area {
+  margin-top: 10px;
+}
 .to-up-triangles {
   font-size: 200%;
 }
