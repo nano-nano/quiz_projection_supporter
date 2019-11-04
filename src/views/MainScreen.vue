@@ -232,6 +232,13 @@ export default {
         qBackgroundColor: '#ffffff'
       })
     })
+  },
+  beforeDestroy: function() {
+    if (this.pjWindow != null) {
+      // メイン画面が終了する際に、投影画面も閉じる
+      this.pjWindow.close()
+      this.pjWindow = null
+    }
   }
 }
 </script>
