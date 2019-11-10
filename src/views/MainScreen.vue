@@ -103,7 +103,6 @@ import ProjectionSettingDialog from '@/components/ProjectionSettingDialog.vue'
 import DisplayConfirmDialog from '@/components/DisplayConfirmDialog.vue'
 
 import { remote } from 'electron'
-// import { BrowserWindow } from 'remote'
 import QuizDataUtils from '@/utils/QuizDataUtils.js'
 import JsonFileUtil from '@/utils/JsonFileUtils.js'
 
@@ -232,14 +231,13 @@ export default {
         qBackgroundColor: '#ffffff'
       })
     })
+    remote.getCurrentWindow().on('close', () => {
+      if (this.pjWindow != null) {
+        this.pjWindow.close()
+        this.pjWindow = null
+      }
+    })
   },
-  beforeDestroy: function() {
-    if (this.pjWindow != null) {
-      // メイン画面が終了する際に、投影画面も閉じる
-      this.pjWindow.close()
-      this.pjWindow = null
-    }
-  }
 }
 </script>
 
