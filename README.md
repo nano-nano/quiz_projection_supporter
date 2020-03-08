@@ -9,6 +9,8 @@
 
 ## これはなに？
 
+![quiz_projection_supporter_usage](https://user-images.githubusercontent.com/29051777/76173353-351fc880-61e2-11ea-9248-7077cd72be04.png)
+
 Quiz Projection Supporterは、
 オフラインで開催される早押しクイズ大会で観客に対して問題文と解答を投影する専用の画面を提供し、
 問題フォロー業務を補助するプログラムです。
