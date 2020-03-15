@@ -26,7 +26,7 @@ Quiz Projection Supporterは、
 
 ## 使い方
 
-準備中...
+順次[Wiki](https://github.com/nano-nano/quiz_projection_supporter/wiki)に掲載しています。
 
 ## ライセンス
 
