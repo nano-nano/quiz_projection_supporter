@@ -1,11 +1,16 @@
 # Quiz Projection Supporter
 
+## 本リポジトリはアーカイブとなりました
 
-## ※お知らせ※
+後継アプリ Quiz Projection Supporter Advanced を提供しています。  
+詳しくは [こちら](https://github.com/nano-nano/quiz_projection_supporter_advanced) から。
+
+## 『実践で学ぶ！Electron+Vue.jsでデスクトップアプリ開発』ご購入の方へ
 
 技術書典6で頒布した『実践で学ぶ！Electron+Vue.jsでデスクトップアプリ開発』の内容に対応したコードは、
 ***stable-tbf6ブランチ*** https://github.com/nano-nano/quiz_projection_supporter/tree/stable-tbf6 をご覧下さい。
 
+---
 
 ## これはなに？
 
@@ -13,11 +18,11 @@
 
 Quiz Projection Supporterは、
 オフラインで開催される早押しクイズ大会で観客に対して問題文と解答を投影する専用の画面を提供し、
-問題フォロー業務を補助するプログラムです。
+問題フォロー業務を補助するアプリです。
 
 ## 主な機能
 
-本プログラムには次の機能があります。
+本アプリには次の機能があります。
 
  - 問題文, 解答, 別解を表示する投影画面と、それを制御するコントロール画面を提供します
  - 投影する問題を指定フォーマットのExcelファイル（パスワード付きも含む）から取り込んで使用できます
@@ -26,7 +31,7 @@ Quiz Projection Supporterは、
 
 ## 使い方
 
-順次[Wiki](https://github.com/nano-nano/quiz_projection_supporter/wiki)に掲載しています。
+[Wiki](https://github.com/nano-nano/quiz_projection_supporter/wiki)に掲載しています。
 
 ## ライセンス
 
